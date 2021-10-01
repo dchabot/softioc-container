@@ -9,4 +9,8 @@ RUN echo "deb https://epicsdeb.bnl.gov/debian/ buster main contrib" | tee /etc/a
 RUN apt-get update
 RUN apt-get install -yq build-essential git epics-dev
 
-CMD softIoc
+RUN apt-get install -yq procps procserv telnet supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY test.db /tmp/test.db
+
+CMD ["/usr/bin/supervisord"]
