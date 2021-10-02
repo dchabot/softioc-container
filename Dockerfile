@@ -9,6 +9,8 @@ RUN echo "deb https://epicsdeb.bnl.gov/debian/ buster main contrib" | tee /etc/a
 RUN apt-get update
 RUN apt-get install -yq build-essential epics-dev
 
-COPY test.db /tmp/test.db
+EXPOSE 5065/tcp 5064/tcp
+EXPOSE 5065/udp 5064/udp
 
+COPY test.db /tmp/test.db
 CMD softIoc -d /tmp/test.db
