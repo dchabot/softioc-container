@@ -12,5 +12,4 @@ RUN apt-get install -yq build-essential epics-dev
 EXPOSE 5065/tcp 5064/tcp
 EXPOSE 5065/udp 5064/udp
 
-COPY test.db /tmp/test.db
-CMD softIoc -d /tmp/test.db
+ENTRYPOINT ["softIoc"]
