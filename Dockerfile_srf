@@ -1,0 +1,21 @@
+FROM debian:buster
+
+USER root
+
+RUN apt-get -q update
+RUN apt-get install -yq wget apt-transport-https gnupg2
+RUN wget --quiet https://epicsdeb.bnl.gov/debian/repo-key.pub -O - \
+                        | apt-key add -
+RUN echo "deb https://epicsdeb.bnl.gov/debian/ buster main contrib" \
+                        | tee /etc/apt/sources.list.d/nsls2.list
+RUN apt-get update
+
+RUN apt-get install -yq build-essential git
+RUN apt-get install -yq fftw3-dev epics-dev epics-busy-dev \
+                        epics-asyn-dev epics-autosave-dev \
+                        epics-caputlog-dev epics-iocstats-dev epics-seq-dev
+
+EXPOSE 5065/tcp 5064/tcp
+EXPOSE 5065/udp 5064/udp
+
+ENTRYPOINT ["softIoc"]
