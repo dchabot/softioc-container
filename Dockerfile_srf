@@ -1,6 +1,4 @@
-FROM debian:buster
-
-USER root
+FROM debian:buster as builder
 
 RUN apt-get -q update
 RUN apt-get install -yq wget apt-transport-https gnupg2
@@ -15,7 +13,22 @@ RUN apt-get install -yq fftw3-dev epics-dev epics-busy-dev \
                         epics-asyn-dev epics-autosave-dev \
                         epics-caputlog-dev epics-iocstats-dev epics-seq-dev
 
+# see https://itnext.io/building-docker-images-from-private-git-repositories-using-ssh-login-433edf5a18f2
+COPY lbl_gitlab_key .
+RUN eval $(ssh-agent) && \
+    ssh-add lbl_gitlab_key && \
+    ssh-keyscan -H gitlab.lbl.gov >> /etc/ssh/ssh_known_hosts && \
+    git clone git@gitlab.lbl.gov:drivers/FEED.git /opt/FEED
+WORKDIR /opt/FEED
+RUN make distclean all
+
+
+FROM debian:buster
+
+COPY --from=builder /opt/FEED /opt/FEED
+RUN chmod 755 /opt/FEED/iocBoot/iochires/st.cmd
+
 EXPOSE 5065/tcp 5064/tcp
 EXPOSE 5065/udp 5064/udp
 
-ENTRYPOINT ["softIoc"]
+ENTRYPOINT ["/opt/FEED/iocBoot/iochires/st.cmd"]
