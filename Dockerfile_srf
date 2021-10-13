@@ -28,6 +28,10 @@ RUN apt-get install -yq vim
 COPY RELEASE.local /opt/FEED/configure
 RUN cd /opt/FEED && make -k || make -k || make -k
 
+
+FROM builder
+
+RUN sed -i -e 's|linux-x86_64-debug|linux-x86_64|g' /opt/FEED/iocBoot/ioctest/st.cmd
 #
 #
 #FROM debian:buster
