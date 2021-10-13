@@ -15,7 +15,10 @@
 # If using libraries in app, set USE_FFTW=YES
 # Else if using system libraries, set USE_SYS_FFTW=YES
 # Else if using package libraries, set USE_PKG_FFTW=YES
-USE_PKG_FFTW=YES
+USE_SYS_FFTW=YES
+
+SHARED_LIBRARIES=YES
+STATIC_BUILD=NO
 
 # ==========================================================
 # Define module paths using pattern
@@ -26,7 +29,7 @@ USE_PKG_FFTW=YES
 ASYN=/usr/lib/epics
 BUSY=/usr/lib/epics
 AUTOSAVE=/usr/lib/epics
-SNCSEQ=/usr/lib/epics
+#SNCSEQ=/usr/lib/epics
 #QF2PREMONITOR=$(EPICS_MODULES)/QF2preMonitor/$(QF2PREMONITOR_MODULE_VERSION)
 
 # Set EPICS_BASE last so it appears last in the DB, DBD, INCLUDE, and LIB search paths
