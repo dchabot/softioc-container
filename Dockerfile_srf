@@ -33,13 +33,7 @@ FROM builder
 
 RUN sed -i -e 's|linux-x86_64-debug|linux-x86_64|g' /opt/FEED/iocBoot/ioctest/st.cmd
 #
+EXPOSE 5065/tcp 5064/tcp
+EXPOSE 5065/udp 5064/udp
 #
-#FROM debian:buster
-#
-#COPY --from=builder /opt/FEED /opt/FEED
-#RUN chmod 755 /opt/FEED/iocBoot/iochires/st.cmd
-#
-#EXPOSE 5065/tcp 5064/tcp
-#EXPOSE 5065/udp 5064/udp
-#
-#ENTRYPOINT ["/opt/FEED/iocBoot/iochires/st.cmd"]
+CMD cd /opt/FEED/iocBoot/ioctest && ./st.cmd
