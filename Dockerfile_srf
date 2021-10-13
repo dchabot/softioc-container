@@ -9,11 +9,6 @@ RUN echo "deb https://epicsdeb.bnl.gov/debian/ buster main contrib" \
 RUN apt-get update
 
 RUN apt-get install -yq build-essential git
-RUN apt-get install -yq epics-dev epics-busy-dev \
-                        epics-asyn-dev epics-autosave-dev \
-                        epics-caputlog-dev epics-iocstats-dev \
-                        epics-seq-dev
-RUN apt-get install -yq fftw3-dev zlib1g-dev
 
 # see https://itnext.io/building-docker-images-from-private-git-repositories-using-ssh-login-433edf5a18f2
 COPY lbl_gitlab_key .
@@ -22,8 +17,16 @@ RUN eval $(ssh-agent) && \
     ssh-keyscan -H gitlab.lbl.gov >> /etc/ssh/ssh_known_hosts && \
     git clone git@gitlab.lbl.gov:drivers/FEED.git /opt/FEED
 
+RUN apt-get install -yq epics-dev epics-busy-dev \
+                        epics-asyn-dev epics-autosave-dev \
+                        epics-caputlog-dev epics-iocstats-dev \
+                        epics-seq-dev
+RUN apt-get install -yq libfftw3-dev zlib1g-dev
+RUN apt-get install -yq python python3 python-numpy python3-numpy
+RUN apt-get install -yq vim
+
 COPY RELEASE.local /opt/FEED/configure
-ENTRYPOINT ["/bin/bash"]
+RUN cd /opt/FEED && make -k || make -k || make -k
 
 #
 #
